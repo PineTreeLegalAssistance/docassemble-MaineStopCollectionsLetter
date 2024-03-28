@@ -1,0 +1,149 @@
+---
+metadata:
+  title: |
+    Maine Stop Collections Form Letter
+  short title: |
+    ME Stop Collections Letter
+  description: |
+    The Maine Stop Collections Form Letter is a tool to help Maine people get creditors to leave them alone and stop trying to collect on certain debts, like credit cards. This letter can only be used by people who have only exempt income and assets under Maine law. 
+  #exit url: https://www.masslegalservices.org/content/online-snap-calculator
+  show login: False
+  #generate download screen: True
+---
+include: 
+  - docassemble.AssemblyLine:assembly_line.yml
+  - custom_ptla_theme_ngb.yml
+---
+features:
+  question back button: True
+  navigation back button: False
+   #theme file downloaded from: bootstrap theme: https://bootswatch.com/cerulean/bootstrap.min.css
+  css: 
+    - ptlatheme.css
+    #- bootstrap.min.css
+  hide navbar: False 
+  debug: False
+---
+modules:
+  - docassemble.base.core
+---
+mandatory: True
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_MaineStopCollectionsLetter
+code: |
+  StopCollections_intro
+  set_progress(20)
+  CollectionsCompany
+  set_progress(40)
+  DemandDate
+  AccountBalance
+  set_progress(60)
+  creditor_address
+  users[0].name
+  set_progress(80)
+  user_address
+  users[0].signature
+  set_progress(100)
+---
+comment: |
+  This question is used to introduce your interview. Please customize
+id: SCL_intro
+continue button field: StopCollections_intro
+question: |
+  Maine Stop Collections Form Letter
+subquestion: |
+  Use this interview to write a letter to creditors to ask them to stop trying to collect on a debt because your income and assets are exempt under Maine law (you are 'collections proof'). 
+  
+  You can only use this form if your income is exempt from collections under Maine law. (Insert info about that here!)
+  
+  This interview should only be used for unsecured debts (like a credit card), not debts like a mortgage or car loan. 
+---
+id: Creditor_Info
+question: |
+  About the creditor
+fields: 
+  - Who is the current creditor trying to collect this debt?: CollectionsCompany
+  - Is the original creditor different from the current creditor?: original_creditor
+    datatype: yesnoradio
+  - Who was the original creditor for this debt?: OriginalCreditor
+    show if: original_creditor
+---
+id: Account Info
+question: |
+  About the account
+fields:
+  - What type of credit card did you have (if it was a store card, say which store it was from): CardType
+  - What is the account number?: AccountNumber
+  - What was the balance on the account at the time it was sold?: AccountBalance
+    datatype: currency
+---  
+id: Company_Info
+question: | 
+  About who owns the debt
+fields:
+  - What is the name of the financial institution (sometimes the parent company of the collections agency) that owns this debt?: FinanceCompany
+  - What is the date on the most recent demand letter they sent you?: DemandDate
+    datatype: date
+---
+id: Creditor address
+sets:
+    - other_parties[0].address.address
+    - other_parties[0].address.unit
+    - other_parties[0].address.city
+    - other_parties[0].address.state
+    - other_parties[0].address.zip
+question:  |
+  What is the creditor's address?
+fields:
+    - Street address: other_parties[0].address.address
+    - Unit/Suite: other_parties[0].address.unit
+      required: False
+    - City/Town: other_parties[0].address.city
+    - State: other_parties[0].address.state
+    - Zip code: other_parties[0].address.zip
+continue button field: creditor_address
+---
+id: User_Info
+question: |
+  What is your full name, as it appears on the demand letter?
+fields:
+  - Full name: users[0].name 
+---
+id: User address
+sets:
+    - users[0].address.address
+    - users[0].address.unit
+    - users[0].address.city
+    - users[0].address.state
+    - users[0].address.zip
+question:  |
+  What is your address?
+fields:
+    - Street address: users[0].address.address
+    - Unit/Apartment: users[0].address.unit
+      required: False
+    - City/Town: users[0].address.city
+    - State: users[0].address.state
+    - Zip code: users[0].address.zip
+continue button field: user_address
+---
+question: |
+  Please sign your name below.
+subquestion: |
+  Your signature will be added to the letter.
+signature: users[0].signature
+under: |
+  ${ users[0].name }
+---
+mandatory: True
+question: |
+  All done! Here is your Stop Collections Letter. Save it or print it to send to the creditor.
+attachment:
+  name: Your letter
+  filename: letter
+  docx template file: Stop_Collections_Letter.docx
+  skip undefined: True
+  valid formats:
+    - pdf
+    - docx
