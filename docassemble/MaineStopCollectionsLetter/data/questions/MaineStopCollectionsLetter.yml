@@ -5,7 +5,7 @@ metadata:
   short title: |
     ME Stop Collections Letter
   description: |
-    The Maine Stop Collections Form Letter is a tool to help Maine people get creditors to leave them alone and stop trying to collect on certain debts, like credit cards. This letter can only be used by people who have only exempt income and assets under Maine law. 
+    The Maine Stop Collections Form Letter is a tool to help Maine people get creditors to leave them alone and stop trying to collect on certain debts, like credit cards. <strong>This letter can only be used by people who have only exempt income and assets under Maine law.</strong> 
   #exit url: https://www.masslegalservices.org/content/online-snap-calculator
   show login: False
   #generate download screen: True
@@ -97,19 +97,44 @@ comment: |
   Controls order and branching logic for questions specific to this form
 id: interview_order_MaineStopCollectionsLetter
 code: |
+  Who_Can_Use
   StopCollections_intro
   set_progress(20)
-  CollectionsCompany
+  users[0].name
+  user_address
   set_progress(40)
+  CollectionsCompany
   DemandDate
-  AccountBalance
   set_progress(60)
   creditor_address
-  users[0].name
+  AccountBalance
   set_progress(80)
-  user_address
   users[0].signature
   set_progress(100)
+---
+id: Who_Can_Use
+continue button field: Who_Can_Use
+continue button label: Get Started
+question: |
+  Maine Stop Collections Form Letter
+subquestion: |
+  Use this interview to write a letter to creditors to ask them to stop trying to collect on a debt because your income and assets are exempt under Maine law (you are 'collections proof'). 
+  
+  <h3>You can only use this form if:</h3> 
+  <ol>
+  <li>Your income and property are exempt from collections under Maine law</li>
+  <strong>and</strong>
+  <li>The debt you want to stop collections on is 'unsecured' like a credit card - not a 'secured' debt like a car loan or a mortgage where you put up property.</li>
+  </ol>
+
+  <h3>Not sure if this is the right tool for you?</h3> 
+  <ul>
+  <li>You can learn more about what kinds of income and property are exempt from collections in Maine in our article <a href="https://www.ptla.org/debt#toc-is-any-of-my-income-or-property-safe-from-the-creditor-">Debt Collection in the Maine Courts</a></li>
+  <li>We also offer a <a href="https://apps-dev.ptla.org/start/debtvalidation/">Debt Validation Request Letter</a> (if you aren't sure you owe the debt or the amount of debt a creditor is trying to collect from you) and a <a href="https://apps-dev.ptla.org/start/debthelper/">Debt Collection Hearing Helper</a> if you are being sued for a debt or need to go to a 'disclosure hearing.'</li>
+  </ul>
+  
+  <strong>If this is the right tool for you, let's get started!</strong>
+  <br />
 ---
 comment: |
   This question is used to introduce your interview. Please customize
@@ -118,14 +143,10 @@ continue button field: StopCollections_intro
 question: |
   Maine Stop Collections Form Letter
 subquestion: |
-  Use this interview to write a letter to creditors to ask them to stop trying to collect on a debt because your income and assets are exempt under Maine law (you are 'collections proof'). 
-  
-  You can only use this form if your income is exempt from collections under Maine law. (Insert info about that here!)
-  
-  This interview should only be used for unsecured debts (like a credit card), not debts like a mortgage or car loan. 
+  Please review our Terms of Use before starting. 
   
     ${ display_template(PTLA_terms_of_use, scrollable=True, collapse=False) }
-
+  <br />
 fields:
   # This points to a terms of use in this package which you can edit.
   # If you prefer, you can link to a static website by deleting everything
