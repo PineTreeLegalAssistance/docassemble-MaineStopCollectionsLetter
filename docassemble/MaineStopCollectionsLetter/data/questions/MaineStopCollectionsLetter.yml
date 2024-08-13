@@ -245,14 +245,36 @@ signature: users[0].signature
 under: |
   ${ users[0].name }
 ---
+objects:
+  - Next_Steps: ALDocument.using(title="Instructions", filename="Next_Steps_Maine_Stop_Collections_Letter.docx", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+  - Maine_Stop_Collections_Letter: ALDocument.using(title="Maine Stop Collections Letter", filename="StopCollectionsLetter", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+---
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[Next_Steps,Maine_Stop_Collections_Letter], filename="stop_collections_package.pdf", title="All documents to download for your records", enabled=True)
+  - al_recipient_bundle: ALDocumentBundle.using(elements=Next_Steps,Debt_Validation_Request_Letter], filename="stop_collections_package.pdf", title="All documents to download for your records", enabled=True)  
+---
 mandatory: True
 question: |
   All done! Here is your Stop Collections Letter. Save it or print it to send to the creditor.
-attachment:
-  name: Your letter
-  filename: letter
-  docx template file: Stop_Collections_Letter.docx
-  skip undefined: True
-  valid formats:
-    - pdf
-    - docx
+subquestion: |
+
+  ${ al_user_bundle.download_list_html() }    
+  
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }  
+
+---
+attachments:
+  - name: Maine Stop Collections Letter
+    filename: letter
+    docx template file: Stop_Collections_Letter.docx
+    skip undefined: True
+    variable name: Maine_Stop_Collections_Letter[i]
+    valid formats:
+      - pdf
+      - docx
+  - name: Next Steps
+    filename: NextSteps - StopCollectionsLetter           
+    skip undefined: True
+    docx template file: Next_Steps_Maine_Stop_Collections_Letter.docx
+    variable name: Next_Steps[i]
+---      
