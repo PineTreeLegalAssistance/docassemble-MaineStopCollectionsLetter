@@ -1,11 +1,11 @@
 ---
 metadata:
   title: |
-    Maine Stop Collections Form Letter
+    Maine 'Stop Collection' Form Letter
   short title: |
-    ME Stop Collections Letter
+    ME 'Stop Collection' Letter
   description: |
-    The Maine Stop Collections Form Letter is a tool to help Maine people get creditors to leave them alone and stop trying to collect on certain debts, like credit cards. <strong>This letter can only be used by people who have only exempt income and assets under Maine law.</strong> 
+    The Maine 'Stop Collection' Form Letter is a tool to help Maine people get creditors to leave them alone and stop trying to collect on certain debts, like credit cards or medical debt. <strong>This letter can only be used by people who have only exempt income and assets under Maine law.</strong> 
   #exit url: https://www.masslegalservices.org/content/online-snap-calculator
   show login: False
   #generate download screen: True
@@ -107,7 +107,6 @@ code: |
   StopCollections_intro
   set_progress(20)
   users[0].name
-  user_address
   set_progress(40)
   CollectionsCompany
   DemandDate
@@ -115,6 +114,7 @@ code: |
   creditor_address
   AccountBalance
   set_progress(80)
+  user_address
   users[0].signature
   set_progress(100)
 ---
@@ -122,20 +122,20 @@ id: Who_Can_Use
 continue button field: Who_Can_Use
 continue button label: Get Started
 question: |
-  Maine Stop Collections Form Letter
+  Maine "Stop Collection" Form Letter
 subquestion: |
   Use this interview to write a letter to creditors to ask them to stop trying to collect on a debt because your income and assets are <a href="https://www.ptla.org/debt#toc-is-any-of-my-income-or-property-safe-from-the-creditor-">exempt under Maine law (you are 'collections proof')</a>. 
   
   <h3>You can only use this form if:</h3> 
   <ol>
-  <li>Your income and property are <a href="https://www.ptla.org/debt#toc-is-any-of-my-income-or-property-safe-from-the-creditor-">exempt from collections under Maine law</a></li>
+  <li>Your income and property are <a href="https://www.ptla.org/debt#toc-is-any-of-my-income-or-property-safe-from-the-creditor-">exempt from collection under Maine law</a></li>
   <strong>and</strong>
-  <li>The debt you want to stop collections on is 'unsecured' like a credit card or a small loan from the bank - not a 'secured' debt like a car loan or a mortgage where you put up property.</li>
+  <li>The debt you want to stop collections on is 'unsecured debt' like a credit card, medical debt, or a small loan from the bank - not a 'secured debt' like a car loan or a mortgage where you put up property as collateral.</li>
   </ol>
 
   <h3>Not sure if this is the right tool for you?</h3> 
   <ul>
-  <li>You can learn more about what kinds of income and property are exempt from collections in Maine in our article <a href="https://www.ptla.org/debt#toc-is-any-of-my-income-or-property-safe-from-the-creditor-">Debt Collection in the Maine Courts</a></li>
+  <li>You can learn more about what kinds of income and property are exempt from collection in Maine in our article <a href="https://www.ptla.org/debt#toc-is-any-of-my-income-or-property-safe-from-the-creditor-">Debt Collection in the Maine Courts</a></li>
   <li>We also offer a <a href="https://apps-dev.ptla.org/start/debtvalidation/">Debt Validation Request Letter</a> (if you aren't sure you owe the debt or the amount of debt a creditor is trying to collect from you) and a <a href="https://apps-dev.ptla.org/start/debthelper/">Debt Collection Hearing Helper</a> if you are being sued for a debt or need to go to a 'disclosure hearing.'</li>
   </ul>
   
@@ -147,7 +147,7 @@ comment: |
 id: SCL_intro
 continue button field: StopCollections_intro
 question: |
-  Maine Stop Collections Form Letter
+  Maine 'Stop Collection' Form Letter
 subquestion: |
   Please review our Terms of Use before starting. 
   
@@ -172,8 +172,12 @@ id: Creditor_Info
 question: |
   About the creditor
 fields: 
-  - Who is the current creditor trying to collect this debt?: CollectionsCompany
-  - Is the original creditor different from the current creditor?: original_creditor
+  - What is the name of the company trying to collect this debt?: CollectionsCompany
+  - Is the company that currently owns the debt different from the company trying to collect the debt?: debt_owner
+    datatype: yesnoradio
+  - What is the name of the company that <strong>owns</strong> the debt?: FinanceCompany
+    show if: debt_owner
+  - Was this debt originally with a different company?: original_creditor
     datatype: yesnoradio
   - Who was the original creditor for this debt?: OriginalCreditor
     show if: original_creditor
@@ -182,20 +186,13 @@ id: Account Info
 question: |
   About the account
 fields:
-  - What type of credit card did you have (if it was a store card, say which store it was from): CardType
   - What is the account number?: AccountNumber
-  - What was the balance on the account at the time it was sold?: AccountBalance
+  - What is the balance on the account?: AccountBalance
     datatype: currency
----  
-id: Company_Info
-question: | 
-  About who owns the debt
-fields:
-  - What is the name of the financial institution (sometimes the parent company of the collections agency) that owns this debt?: FinanceCompany
   - What is the date on the most recent demand letter they sent you?: DemandDate
     datatype: date
----
-id: Creditor address
+---  
+id: Debt collector address
 sets:
     - other_parties[0].address.address
     - other_parties[0].address.unit
@@ -203,7 +200,7 @@ sets:
     - other_parties[0].address.state
     - other_parties[0].address.zip
 question:  |
-  What is the creditor's address?
+  What is the debt collector's address?
 fields:
     - Street address: other_parties[0].address.address
     - Unit/Suite: other_parties[0].address.unit
@@ -247,7 +244,7 @@ under: |
 ---
 objects:
   - Next_Steps: ALDocument.using(title="Instructions", filename="Next_Steps_Maine_Stop_Collections_Letter.docx", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
-  - Maine_Stop_Collections_Letter: ALDocument.using(title="Maine Stop Collections Letter", filename="StopCollectionsLetter", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+  - Maine_Stop_Collections_Letter: ALDocument.using(title="Maine Stop Collection Letter", filename="StopCollectionsLetter", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
 ---
 objects:
   - al_user_bundle: ALDocumentBundle.using(elements=[Next_Steps,Maine_Stop_Collections_Letter], filename="stop_collections_package.pdf", title="All documents to download for your records", enabled=True)
@@ -255,7 +252,7 @@ objects:
 ---
 mandatory: True
 question: |
-  All done! Here is your Stop Collections Letter. Save it or print it to send to the creditor.
+  All done! Here is your 'Stop Collection' Letter. Save it or print it to send to the debt collector.
 subquestion: |
 
   ${ al_user_bundle.download_list_html() }    
