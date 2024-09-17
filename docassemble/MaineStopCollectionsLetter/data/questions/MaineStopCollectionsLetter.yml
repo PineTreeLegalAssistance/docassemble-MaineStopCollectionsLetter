@@ -30,6 +30,9 @@ features:
   hide navbar: False 
   debug: False
 ---
+code: |
+  al_form_requires_digital_signature = False
+---
 modules:
   - docassemble.base.core
 ---
@@ -115,7 +118,9 @@ code: |
   AccountBalance
   set_progress(80)
   user_address
-  users[0].signature
+  saw_signature_choice
+  if signature_choice == 'this_device':
+    users[0].signature
   set_progress(100)
 ---
 id: Who_Can_Use
@@ -234,10 +239,27 @@ fields:
     - Zip code: users[0].address.zip
 continue button field: user_address
 ---
+id: signature choice
+decoration: file-signature
+question: |
+  Your letter is almost ready
+subquestion: |
+  How do you want to sign it?
+fields: 
+  - I will sign: signature_choice
+    input type: radio
+    choices:
+      - Electronically on this device: this_device
+      - On the paper with a pen after I print the documents: sign_after_printing
+    show if:
+      code: |
+        not al_form_requires_digital_signature
+continue button field: saw_signature_choice        
+---
 question: |
   Please sign your name below.
 subquestion: |
-  Your signature will be added to the letter.
+  Sign your letter using your finger on a touchscreen, or a mouse - your signature will be added to your letter.
 signature: users[0].signature
 under: |
   ${ users[0].name }
