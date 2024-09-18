@@ -178,11 +178,11 @@ question: |
   About the creditor
 fields: 
   - What is the name of the company trying to collect this debt?: CollectionsCompany
-  - Is the company that currently owns the debt different from the company trying to collect the debt?: debt_owner
+  - Is the company that currently owns the debt different from the company trying to collect the debt? (If you don't know, say 'no.'): debt_owner
     datatype: yesnoradio
   - What is the name of the company that <strong>owns</strong> the debt?: FinanceCompany
     show if: debt_owner
-  - Was this debt originally with a different company?: original_creditor
+  - Was this debt originally with a different company? (If you don't know, say 'no.'): original_creditor
     datatype: yesnoradio
   - Who was the original creditor for this debt?: OriginalCreditor
     show if: original_creditor
