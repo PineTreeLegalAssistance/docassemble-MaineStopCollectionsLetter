@@ -272,6 +272,7 @@ objects:
   - al_user_bundle: ALDocumentBundle.using(elements=[Next_Steps,Maine_Stop_Collections_Letter], filename="stop_collections_package.pdf", title="All documents to download for your records", enabled=True)
   - al_recipient_bundle: ALDocumentBundle.using(elements=Next_Steps,Debt_Validation_Request_Letter], filename="stop_collections_package.pdf", title="All documents to download for your records", enabled=True)  
 ---
+id: interview_complete
 mandatory: True
 question: |
   All done! Here is your 'Stop Collection' Letter. Save it or print it to send to the debt collector.
